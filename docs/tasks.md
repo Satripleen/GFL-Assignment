@@ -45,11 +45,12 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   present in the data) spanning 2022-01-01 .. 2024-12-31.
 
 ## Task 4 — Gold facts
-- [ ] `fact_route_day` — atomic grain, FKs to `dim_date`/`dim_route`; MERGE on `route_date_key`
-- [ ] `fact_route_month` — rolled-up sums + volume-weighted margin; partition by `region`;
+- [x] `fact_route_day` — atomic grain, FKs to `dim_date`/`dim_route`; MERGE on `route_date_key`
+- [x] `fact_route_month` — rolled-up sums + revenue-weighted margin; partition by `region`;
       OPTIMIZE + ZORDER(`bu`, `area`)
-- **Acceptance:** `fact_route_day` = 12,000; **re-running the pipeline leaves row counts
-  unchanged** (idempotent MERGE); month-level sums tie back to day-level sums.
+- **Acceptance:** ✅ `fact_route_day` = 12,000; `fact_route_month` = 4,035 route-months;
+  **full-pipeline re-run leaves every layer's count unchanged** (idempotent); month-level
+  sums tie back to day-level sums exactly (revenue/profit/cost/stops, diff 0.0000).
 
 ## Task 5 — route_scorecard (the Part 2 verdict)
 - [ ] Per-route: `median_margin_pct`, `pct_days_below_peer`, `loss_day_rate`,
