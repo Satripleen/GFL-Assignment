@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Spark / Delta build artifacts (the lakehouse is regenerated from the committed CSV)
+spark-warehouse/
+metastore_db/
+derby.log
+data/lakehouse/
+
+# OS
+.DS_Store
+
+# Note: data/gfl_commercial_routes.csv IS committed so the pipeline is clone-and-run.

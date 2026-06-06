@@ -1,0 +1,174 @@
+<svg viewBox="0 0 1480 1620" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#52606D"/>
+    </marker>
+    <marker id="arrowOpen" markerWidth="12" markerHeight="12" refX="9" refY="3.5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L9,3.5 L0,7" fill="none" stroke="#0E7A3D" stroke-width="1.4"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1480" height="1620" fill="#FFFFFF"/>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1480" height="92" fill="#0E7A3D"/>
+  <text x="40" y="42" fill="#FFFFFF" font-size="26" font-weight="700">GFL Commercial — Route Profitability</text>
+  <text x="40" y="72" fill="#CDEBD8" font-size="16">Pipeline Architecture &amp; Dimensional Model · Design Document</text>
+  <text x="1440" y="58" fill="#CDEBD8" font-size="13" text-anchor="end">PySpark + Delta Lake · Medallion · Star schema</text>
+
+  <!-- ============ PANEL A: ARCHITECTURE ============ -->
+  <text x="40" y="140" fill="#1F2933" font-size="20" font-weight="700">1 · Pipeline Architecture (Medallion + Delta Lake)</text>
+
+  <!-- CSV source -->
+  <rect x="40" y="170" width="150" height="96" rx="8" fill="#F4F6F8" stroke="#CBD2D9"/>
+  <text x="115" y="205" text-anchor="middle" fill="#1F2933" font-size="15" font-weight="700">Source</text>
+  <text x="115" y="228" text-anchor="middle" fill="#52606D" font-size="12">gfl_commercial_</text>
+  <text x="115" y="244" text-anchor="middle" fill="#52606D" font-size="12">routes.csv</text>
+  <text x="115" y="260" text-anchor="middle" fill="#7B8794" font-size="11">12,000 rows</text>
+
+  <line x1="192" y1="218" x2="248" y2="218" stroke="#52606D" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Bronze -->
+  <rect x="250" y="170" width="190" height="96" rx="8" fill="#FBF1E3" stroke="#B0793A"/>
+  <text x="345" y="205" text-anchor="middle" fill="#8A5A22" font-size="15" font-weight="700">BRONZE</text>
+  <text x="345" y="227" text-anchor="middle" fill="#52606D" font-size="11.5">Raw landing · Delta</text>
+  <text x="345" y="244" text-anchor="middle" fill="#52606D" font-size="11.5">Enforced schema</text>
+  <text x="345" y="261" text-anchor="middle" fill="#52606D" font-size="11.5">No transforms</text>
+
+  <line x1="442" y1="218" x2="498" y2="218" stroke="#52606D" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Silver -->
+  <rect x="500" y="170" width="200" height="96" rx="8" fill="#EEF1F4" stroke="#9AA3AD"/>
+  <text x="600" y="205" text-anchor="middle" fill="#3E4C59" font-size="15" font-weight="700">SILVER</text>
+  <text x="600" y="227" text-anchor="middle" fill="#52606D" font-size="11.5">Dedup · typed · cleaned</text>
+  <text x="600" y="244" text-anchor="middle" fill="#52606D" font-size="11.5">Recompute profit (+_src)</text>
+  <text x="600" y="261" text-anchor="middle" fill="#52606D" font-size="11.5">Derived metrics + cohort</text>
+
+  <line x1="702" y1="218" x2="758" y2="218" stroke="#52606D" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Gold container -->
+  <rect x="760" y="150" width="420" height="200" rx="10" fill="#FCF6E0" stroke="#C9A227"/>
+  <text x="970" y="176" text-anchor="middle" fill="#8A6D0F" font-size="15" font-weight="700">GOLD</text>
+  <rect x="780" y="188" width="380" height="44" rx="6" fill="#FFFFFF" stroke="#C9A227"/>
+  <text x="792" y="210" fill="#1F2933" font-size="13" font-weight="700">fact_route_day</text>
+  <text x="792" y="226" fill="#7B8794" font-size="11">atomic grain · 1 row / route / day</text>
+  <rect x="780" y="240" width="380" height="44" rx="6" fill="#FFFFFF" stroke="#C9A227"/>
+  <text x="792" y="262" fill="#1F2933" font-size="13" font-weight="700">fact_route_month</text>
+  <text x="792" y="278" fill="#7B8794" font-size="11">aggregate · BI speed · OPTIMIZE+ZORDER</text>
+  <rect x="780" y="292" width="380" height="44" rx="6" fill="#FFFFFF" stroke="#C9A227"/>
+  <text x="792" y="314" fill="#1F2933" font-size="13" font-weight="700">route_scorecard</text>
+  <text x="792" y="330" fill="#7B8794" font-size="11">route grain · Tier 1/2 verdict (Part 2)</text>
+
+  <line x1="1182" y1="250" x2="1238" y2="250" stroke="#52606D" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Consumers -->
+  <rect x="1240" y="190" width="200" height="120" rx="8" fill="#E8F5EE" stroke="#0E7A3D"/>
+  <text x="1340" y="222" text-anchor="middle" fill="#0E7A3D" font-size="14" font-weight="700">Consumers</text>
+  <text x="1340" y="248" text-anchor="middle" fill="#52606D" font-size="12">BI dashboard</text>
+  <text x="1340" y="266" text-anchor="middle" fill="#52606D" font-size="12">(date/region/BU/area)</text>
+  <text x="1340" y="290" text-anchor="middle" fill="#52606D" font-size="12">Profitability analysis</text>
+
+  <!-- Delta features strip -->
+  <rect x="250" y="372" width="930" height="60" rx="8" fill="#F4F6F8" stroke="#CBD2D9"/>
+  <text x="270" y="396" fill="#1F2933" font-size="13" font-weight="700">Delta features:</text>
+  <text x="270" y="418" fill="#52606D" font-size="12.5">MERGE on route_date_key (idempotent re-runs — primary)  ·  OPTIMIZE + ZORDER(bu, area) on fact_route_month  ·  partition by region</text>
+
+  <!-- Metric definition callout -->
+  <rect x="40" y="455" width="1400" height="92" rx="10" fill="#E8F5EE" stroke="#0E7A3D"/>
+  <text x="60" y="483" fill="#0E7A3D" font-size="15" font-weight="700">Underperformance — definition (cohort-relative, two-tier)</text>
+  <text x="60" y="508" fill="#1F2933" font-size="12.5">Cohort = primary_waste_stream × primary_customer_segment (neutralises the ~40-pt structural margin gap between e.g. General Waste 35.6% and Cardboard 76.5%).</text>
+  <text x="60" y="530" fill="#1F2933" font-size="12.5">Judged on persistence vs cohort.  TIER 1 Loss-making (neg. median profit / high loss-day rate → re-price or cut).  TIER 2 Margin leak (profitable but chronically below peers → optimise).  Absolute floor: any neg-profit day flagged.</text>
+
+  <line x1="40" y1="585" x2="1440" y2="585" stroke="#E4E7EB" stroke-width="1.5"/>
+
+  <!-- ============ PANEL B: ERD ============ -->
+  <text x="40" y="630" fill="#1F2933" font-size="20" font-weight="700">2 · Dimensional Model — Star Schema (natural keys · SCD Type 1)</text>
+
+  <!-- Legend -->
+  <line x1="900" y1="618" x2="940" y2="618" stroke="#0E7A3D" stroke-width="2"/>
+  <text x="948" y="622" fill="#52606D" font-size="12">FK relationship (1 — ∞)</text>
+  <line x1="1110" y1="618" x2="1150" y2="618" stroke="#0E7A3D" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="1158" y="622" fill="#52606D" font-size="12">derived / aggregate</text>
+
+  <!-- dim_date (top) -->
+  <rect x="565" y="670" width="290" height="150" rx="8" fill="#FFFFFF" stroke="#3E4C59" stroke-width="1.5"/>
+  <rect x="565" y="670" width="290" height="30" rx="8" fill="#3E4C59"/>
+  <rect x="565" y="688" width="290" height="12" fill="#3E4C59"/>
+  <text x="710" y="691" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">dim_date</text>
+  <text x="580" y="722" fill="#0E7A3D" font-size="12.5" font-weight="700">PK  date_key  (yyyymmdd int)</text>
+  <text x="580" y="744" fill="#1F2933" font-size="12.5">date</text>
+  <text x="580" y="764" fill="#1F2933" font-size="12.5">year · quarter · month</text>
+  <text x="580" y="784" fill="#1F2933" font-size="12.5">day_of_week</text>
+  <text x="580" y="806" fill="#7B8794" font-size="11">smart key drives all time rollups</text>
+
+  <!-- dim_route (left) -->
+  <rect x="120" y="900" width="320" height="210" rx="8" fill="#FFFFFF" stroke="#3E4C59" stroke-width="1.5"/>
+  <rect x="120" y="900" width="320" height="30" rx="8" fill="#3E4C59"/>
+  <rect x="120" y="918" width="320" height="12" fill="#3E4C59"/>
+  <text x="280" y="921" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">dim_route</text>
+  <text x="135" y="952" fill="#0E7A3D" font-size="12.5" font-weight="700">PK  route_id</text>
+  <text x="135" y="974" fill="#1F2933" font-size="12.5">region   (6)</text>
+  <text x="135" y="994" fill="#1F2933" font-size="12.5">bu       (8)</text>
+  <text x="135" y="1014" fill="#1F2933" font-size="12.5">area     (29)</text>
+  <text x="135" y="1034" fill="#1F2933" font-size="12.5">primary_waste_stream</text>
+  <text x="135" y="1054" fill="#1F2933" font-size="12.5">primary_customer_segment</text>
+  <text x="135" y="1074" fill="#1F2933" font-size="12.5">cohort_key</text>
+  <text x="135" y="1098" fill="#7B8794" font-size="11">geography flattened (strict, stable hierarchy)</text>
+
+  <!-- fact_route_day (center) -->
+  <rect x="540" y="880" width="340" height="290" rx="8" fill="#FCF6E0" stroke="#C9A227" stroke-width="2"/>
+  <rect x="540" y="880" width="340" height="30" rx="8" fill="#C9A227"/>
+  <rect x="540" y="898" width="340" height="12" fill="#C9A227"/>
+  <text x="710" y="901" text-anchor="middle" fill="#FFFFFF" font-size="14" font-weight="700">fact_route_day  (atomic)</text>
+  <text x="555" y="932" fill="#0E7A3D" font-size="12.5" font-weight="700">PK  route_date_key</text>
+  <text x="555" y="953" fill="#1565C0" font-size="12.5" font-weight="700">FK  date_key  →  dim_date</text>
+  <text x="555" y="973" fill="#1565C0" font-size="12.5" font-weight="700">FK  route_id  →  dim_route</text>
+  <line x1="555" y1="984" x2="865" y2="984" stroke="#E4E7EB"/>
+  <text x="555" y="1004" fill="#7B8794" font-size="11" font-weight="700">MEASURES</text>
+  <text x="555" y="1024" fill="#1F2933" font-size="12">stops: total / completed / missed</text>
+  <text x="555" y="1043" fill="#1F2933" font-size="12">distance_km · fuel_l · labour_hrs</text>
+  <text x="555" y="1062" fill="#1F2933" font-size="12">tonnes · yards · revenue</text>
+  <text x="555" y="1081" fill="#1F2933" font-size="12">costs: disposal/fuel/labour/maint/admin</text>
+  <text x="555" y="1100" fill="#1F2933" font-size="12">gross_profit* · gross_margin_pct*  (*recomputed)</text>
+  <text x="555" y="1119" fill="#1F2933" font-size="12">profit_per_stop · profit_per_km</text>
+  <text x="555" y="1138" fill="#1F2933" font-size="12">cost_per_tonne · completion_rate</text>
+  <text x="555" y="1157" fill="#1F2933" font-size="12">on_time_flag · incident_flag</text>
+
+  <!-- fact_route_month (bottom) -->
+  <rect x="540" y="1240" width="340" height="120" rx="8" fill="#FFFFFF" stroke="#C9A227" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="710" y="1268" text-anchor="middle" fill="#8A6D0F" font-size="14" font-weight="700">fact_route_month  (aggregate)</text>
+  <text x="555" y="1294" fill="#1F2933" font-size="12">grain: route × month</text>
+  <text x="555" y="1314" fill="#1F2933" font-size="12">rolled-up sums + volume-weighted margin</text>
+  <text x="555" y="1334" fill="#7B8794" font-size="11.5">rolls up from fact_route_day · backs the dashboard</text>
+
+  <!-- route_scorecard (right) -->
+  <rect x="960" y="900" width="340" height="200" rx="8" fill="#FFFFFF" stroke="#0E7A3D" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="1130" y="928" text-anchor="middle" fill="#0E7A3D" font-size="14" font-weight="700">route_scorecard  (derived)</text>
+  <text x="975" y="954" fill="#0E7A3D" font-size="12.5" font-weight="700">PK  route_id</text>
+  <text x="975" y="976" fill="#1F2933" font-size="12.5">median_margin_pct</text>
+  <text x="975" y="996" fill="#1F2933" font-size="12.5">pct_days_below_peer</text>
+  <text x="975" y="1016" fill="#1F2933" font-size="12.5">loss_day_rate</text>
+  <text x="975" y="1036" fill="#1F2933" font-size="12.5">cohort_median_margin</text>
+  <text x="975" y="1058" fill="#B91C1C" font-size="12.5" font-weight="700">tier  (1 Loss-making / 2 Margin leak / OK)</text>
+  <text x="975" y="1082" fill="#7B8794" font-size="11">the Part 2 verdict — 1 row per route</text>
+
+  <!-- Relationships -->
+  <!-- dim_date 1 - * fact_route_day -->
+  <line x1="710" y1="820" x2="710" y2="880" stroke="#0E7A3D" stroke-width="2" marker-end="url(#arrowOpen)"/>
+  <text x="722" y="844" fill="#52606D" font-size="12">1</text>
+  <text x="722" y="874" fill="#52606D" font-size="12">∞</text>
+  <!-- dim_route 1 - * fact_route_day -->
+  <line x1="440" y1="1005" x2="540" y2="1005" stroke="#0E7A3D" stroke-width="2" marker-end="url(#arrowOpen)"/>
+  <text x="452" y="998" fill="#52606D" font-size="12">1</text>
+  <text x="520" y="998" fill="#52606D" font-size="12">∞</text>
+  <!-- fact_route_day -> fact_route_month (roll up) -->
+  <line x1="710" y1="1170" x2="710" y2="1240" stroke="#0E7A3D" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrowOpen)"/>
+  <text x="720" y="1212" fill="#52606D" font-size="11">roll-up</text>
+  <!-- fact_route_day -> route_scorecard (derive) -->
+  <line x1="880" y1="1000" x2="960" y2="1000" stroke="#0E7A3D" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrowOpen)"/>
+  <text x="895" y="992" fill="#52606D" font-size="11">derive</text>
+
+  <!-- footer -->
+  <text x="40" y="1560" fill="#7B8794" font-size="12">SCD Type 1 chosen — hierarchy verified stable across 2022–2024 (0 routes change area/BU/region). Upgrade to Type 2 via Delta MERGE if reassignments ever appear.</text>
+  <text x="40" y="1582" fill="#7B8794" font-size="12">Natural keys preferred over surrogates: stable distributed-Spark key generation is awkward; MERGE on business keys gives clean idempotent upserts.</text>
+</svg>
