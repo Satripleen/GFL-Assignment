@@ -67,7 +67,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   717 loss-days (6.0%) of which only 25 (3.5%) carry an incident; maintenance on loss-days
   is in line with normal days.
 
-## Task 7 — README
-- [ ] Run instructions, design summary, how to reproduce, results overview
-- **Acceptance:** a fresh clone → documented single command runs the full pipeline end to
-  end and produces the Gold tables.
+## Task 7 — README + Docker
+- [x] `src/pipeline.py` — single end-to-end entry point (Bronze → scorecard)
+- [x] `Dockerfile` + `docker-compose.yml` + `.dockerignore` (the deferred container story)
+- [x] `README.md` — native + Docker quickstart, design summary, results, repo layout
+- **Acceptance:** ✅ (native) from a wiped lakehouse, `python -m src.pipeline` rebuilds all
+  7 tables end to end in ~13s. ⚠️ Docker path written but **not run locally** — Docker isn't
+  installed on this machine (per the "native now, Docker later" env decision).

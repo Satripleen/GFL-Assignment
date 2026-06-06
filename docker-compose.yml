@@ -1,0 +1,21 @@
+# Two ways to run the project in a container.
+#   docker compose run --rm pipeline    # build the lakehouse end to end
+#   docker compose up jupyter           # explore notebooks/analysis.ipynb at :8888
+#
+# The repo is mounted at /app so the generated data/lakehouse lands back on the host.
+services:
+  pipeline:
+    build: .
+    volumes:
+      - ./:/app
+    command: python -m src.pipeline
+
+  jupyter:
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - "8888:8888"
+    command: >
+      jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+      --allow-root --NotebookApp.token=''
