@@ -53,11 +53,12 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   sums tie back to day-level sums exactly (revenue/profit/cost/stops, diff 0.0000).
 
 ## Task 5 — route_scorecard (the Part 2 verdict)
-- [ ] Per-route: `median_margin_pct`, `pct_days_below_peer`, `loss_day_rate`,
-      `cohort_median_margin`
-- [ ] Tier assignment: 1 Loss-making / 2 Margin leak / OK
-- **Acceptance:** ~22 of 120 routes flagged below cohort on >70% of days; every route gets a
-  tier; Tier 1 routes have negative median profit / high loss-day rate.
+- [x] Per-route: `median_margin_pct`, `pct_days_below_peer`, `loss_day_rate`,
+      `cohort_median_margin` (+ profit/stop guard per §1.3)
+- [x] Tier assignment: 1 Loss-making / 2 Margin leak / OK
+- **Acceptance:** ✅ 120 routes scored; **exactly 22** flagged below cohort on >70% of days
+  (reproduces the spec figure); every route gets a tier; split = 4 Tier 1 (loss-making) +
+  18 Tier 2 (margin leak) + 98 OK. Thresholds: below-peer >0.70, loss_day_rate >0.50.
 
 ## Task 6 — Analysis notebook
 - [ ] Cohort margin gap, concentration of underperformance, structural-vs-episodic evidence
