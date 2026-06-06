@@ -8,9 +8,12 @@ waste streams have structurally different margins.
 - **Part 1 — Pipeline:** a medallion (Bronze → Silver → Gold) build on Delta Lake.
 - **Part 2 — Verdict:** `route_scorecard`, a per-route Tier 1 / Tier 2 rating.
 
-Design rationale lives in [`docs/spec.md`](docs/spec.md); the architecture & ERD
-diagram is [`docs/design.svg`](docs/design.svg); the build log with per-task
-acceptance checks is [`docs/tasks.md`](docs/tasks.md).
+Design rationale lives in [`docs/spec.md`](docs/spec.md); the build log with
+per-task acceptance checks is [`docs/tasks.md`](docs/tasks.md).
+
+![GFL Route Profitability — architecture and dimensional model](docs/design.png)
+
+*Pipeline architecture and the star-schema ERD — vector source: [`docs/design.svg`](docs/design.svg).*
 
 ---
 
@@ -81,14 +84,6 @@ Running the pipeline produces Delta tables under `data/lakehouse/`:
   carry an incident and maintenance cost is in line with normal days.
 
 See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full evidence.
-
----
-
-## Architecture & data model
-
-Pipeline architecture and the star-schema ERD (vector source: [`docs/design.svg`](docs/design.svg)):
-
-![GFL Route Profitability — architecture and dimensional model](docs/design.png)
 
 ---
 
