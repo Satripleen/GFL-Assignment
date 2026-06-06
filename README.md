@@ -26,6 +26,13 @@ docker compose run --rm pipeline      # builds the full lakehouse
 docker compose up jupyter             # explore the analysis at http://localhost:8888
 ```
 
+No Docker Desktop required — this is verified with [Colima](https://github.com/abiosoft/colima):
+
+```bash
+brew install colima docker docker-compose
+colima start --cpu 4 --memory 6
+```
+
 ### Option B — Native (macOS, Homebrew)
 
 ```bash

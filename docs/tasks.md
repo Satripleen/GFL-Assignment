@@ -72,5 +72,6 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] `Dockerfile` + `docker-compose.yml` + `.dockerignore` (the deferred container story)
 - [x] `README.md` — native + Docker quickstart, design summary, results, repo layout
 - **Acceptance:** ✅ (native) from a wiped lakehouse, `python -m src.pipeline` rebuilds all
-  7 tables end to end in ~13s. ⚠️ Docker path written but **not run locally** — Docker isn't
-  installed on this machine (per the "native now, Docker later" env decision).
+  7 tables end to end in ~13s. ✅ (Docker) `docker compose run --rm pipeline` builds the
+  image and produces identical results in the container (~19s) — verified via Colima (no
+  Docker Desktop needed).
