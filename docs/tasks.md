@@ -11,9 +11,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] `data/gfl_commercial_routes.csv` committed (12,000 rows + header)
 - [x] `.gitignore` excludes the regenerable lakehouse + caches
 - [x] `docs/spec.md` (SDD) and `docs/tasks.md` in place
-- [ ] `src/` config module: Spark+Delta session builder, path constants
-- **Acceptance:** `pip install -r requirements.txt` is clean; a Spark+Delta session
-  starts and reads the CSV row count = 12,000.
+- [x] `src/` config module: Spark+Delta session builder, path constants
+- **Acceptance:** ✅ `pip install -r requirements.txt` clean; `python -m src.config`
+  starts a Spark+Delta session (auto-resolves JAVA_HOME) and reads the CSV at 12,000 rows.
 
 ## Task 1 — Bronze (immutable landing)
 - [ ] Hand-written `StructType` for all 39 source columns (enforced, not inferred)

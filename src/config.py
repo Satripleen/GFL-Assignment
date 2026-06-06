@@ -1,0 +1,87 @@
+"""Shared configuration: filesystem paths and the Spark + Delta session builder.
+
+Everything downstream (Bronze/Silver/Gold) imports from here so paths and the
+session are defined once. Run this module directly as a smoke test:
+
+    .venv/bin/python -m src.config
+"""
+from __future__ import annotations
+
+import os
+import subprocess
+from pathlib import Path
+
+from pyspark.sql import SparkSession
+from delta import configure_spark_with_delta_pip
+
+# --- Paths -----------------------------------------------------------------
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = PROJECT_ROOT / "data"
+SOURCE_CSV = DATA_DIR / "gfl_commercial_routes.csv"
+
+LAKEHOUSE = DATA_DIR / "lakehouse"
+BRONZE = LAKEHOUSE / "bronze"
+SILVER = LAKEHOUSE / "silver"
+GOLD = LAKEHOUSE / "gold"
+
+# Delta table locations (path-based tables — no external metastore needed)
+BRONZE_ROUTE_DAY = BRONZE / "route_day"
+SILVER_ROUTE_DAY = SILVER / "route_day"
+SILVER_QUARANTINE = SILVER / "route_day_quarantine"
+DIM_DATE = GOLD / "dim_date"
+DIM_ROUTE = GOLD / "dim_route"
+FACT_ROUTE_DAY = GOLD / "fact_route_day"
+FACT_ROUTE_MONTH = GOLD / "fact_route_month"
+ROUTE_SCORECARD = GOLD / "route_scorecard"
+
+EXPECTED_SOURCE_ROWS = 12_000
+
+
+# --- Java ------------------------------------------------------------------
+def _ensure_java_home() -> None:
+    """Point JAVA_HOME at the Homebrew openjdk@17 if it isn't already set, so the
+    pipeline runs without the caller having to export it first. Falls back
+    silently to whatever `java` is on PATH."""
+    if os.environ.get("JAVA_HOME"):
+        return
+    try:
+        prefix = subprocess.check_output(
+            ["brew", "--prefix", "openjdk@17"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        candidate = Path(prefix) / "libexec/openjdk.jdk/Contents/Home"
+        if candidate.exists():
+            os.environ["JAVA_HOME"] = str(candidate)
+    except Exception:
+        pass
+
+
+# --- Spark -----------------------------------------------------------------
+def get_spark(app_name: str = "gfl-route-profitability") -> SparkSession:
+    """Build a local Spark session with the Delta Lake extension enabled."""
+    _ensure_java_home()
+    builder = (
+        SparkSession.builder.appName(app_name)
+        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")
+        .config(
+            "spark.sql.catalog.spark_catalog",
+            "org.apache.spark.sql.delta.catalog.DeltaCatalog",
+        )
+        .config("spark.sql.session.timeZone", "UTC")
+        # Small dataset (12k rows) — keep shuffle partitions low so it stays snappy.
+        .config("spark.sql.shuffle.partitions", "8")
+    )
+    spark = configure_spark_with_delta_pip(builder).getOrCreate()
+    spark.sparkContext.setLogLevel("WARN")
+    return spark
+
+
+if __name__ == "__main__":
+    # Task 0 acceptance check: session starts and reads the CSV at 12,000 rows.
+    spark = get_spark("config-smoke-test")
+    print(f"JAVA_HOME = {os.environ.get('JAVA_HOME')}")
+    print(f"Spark {spark.version}  |  Delta extension enabled")
+    rows = spark.read.option("header", True).csv(str(SOURCE_CSV)).count()
+    print(f"source CSV rows = {rows:,}  (expected {EXPECTED_SOURCE_ROWS:,})")
+    assert rows == EXPECTED_SOURCE_ROWS, f"row count mismatch: {rows}"
+    print("OK — environment is good.")
+    spark.stop()
