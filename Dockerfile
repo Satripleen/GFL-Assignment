@@ -25,4 +25,4 @@ COPY . .
 ENV PYTHONPATH=/app
 
 # Default: run the whole Bronze->Gold pipeline.
-CMD ["python", "-m", "src.pipeline"]
+CMD ["python", "pipeline.py"]

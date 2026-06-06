@@ -39,7 +39,7 @@ colima start --cpu 4 --memory 6
 brew install openjdk@17               # Spark needs a JVM (17)
 python3 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m src.pipeline      # Bronze -> Silver -> Gold, ~13s
+.venv/bin/python pipeline.py          # Bronze -> Silver -> Gold, ~13s
 ```
 
 `src/config.py` auto-resolves `JAVA_HOME` to the Homebrew JDK, so no env setup is
@@ -108,7 +108,7 @@ src/config.py                    paths + Spark/Delta session + MERGE helper
 src/bronze.py  silver.py         ingestion + cleaning
 src/gold_dims.py  gold_facts.py  star schema
 src/scorecard.py                 Part 2 verdict
-src/pipeline.py                  end-to-end driver (single command)
+pipeline.py                      end-to-end driver (single command, at repo root)
 notebooks/analysis.ipynb         Part 2 evidence (executed)
 docs/spec.md  design.svg  tasks.md
 Dockerfile  docker-compose.yml
