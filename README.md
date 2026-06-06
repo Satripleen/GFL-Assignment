@@ -84,6 +84,14 @@ See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full evidence
 
 ---
 
+## Architecture & data model
+
+Pipeline architecture and the star-schema ERD (source: [`docs/design.svg`](docs/design.svg)):
+
+![GFL Route Profitability — architecture and dimensional model](docs/design.svg)
+
+---
+
 ## How it works
 
 - **Bronze** — raw CSV → Delta under a hand-written, *enforced* schema (FAILFAST):
