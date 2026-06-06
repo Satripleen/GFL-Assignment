@@ -13,7 +13,7 @@ per-task acceptance checks is [`docs/tasks.md`](docs/tasks.md).
 
 ![GFL Route Profitability — architecture and dimensional model](docs/design.png)
 
-*Pipeline architecture and the star-schema ERD — vector source: [`docs/design.svg`](docs/design.svg).*
+*Pipeline architecture and the star-schema ERD.*
 
 ---
 
