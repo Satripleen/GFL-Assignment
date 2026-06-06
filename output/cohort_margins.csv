@@ -1,0 +1,22 @@
+cohort_key,cohort_median_margin,route_days
+General Waste | Office & Commercial,17.51,1556
+Organics | Office & Commercial,19.02,200
+General Waste | Retail,27.09,1900
+General Waste | Hospitality,31.48,513
+Organics | Retail,34.06,189
+General Waste | Restaurant & Food Service,43.55,1196
+Organics | Restaurant & Food Service,45.51,194
+General Waste | Industrial,48.24,1645
+General Waste | Healthcare,51.69,547
+Organics | Industrial,52.07,189
+Organics | Healthcare,52.16,195
+Recycling | Retail,68.42,999
+Recycling | Office & Commercial,69.05,291
+Cardboard | Office & Commercial,73.52,222
+Recycling | Restaurant & Food Service,74.57,901
+Cardboard | Retail,75.31,278
+Recycling | Industrial,75.55,202
+Recycling | Hospitality,75.58,386
+Cardboard | Restaurant & Food Service,78.49,208
+Recycling | Healthcare,79.57,87
+Cardboard | Healthcare,83.65,102

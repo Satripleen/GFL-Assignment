@@ -1,0 +1,23 @@
+route_id,cohort_key,median_margin_pct,cohort_median_margin,pct_days_below_peer,loss_day_rate,tier,tier_code
+RTE-0035,General Waste | Office & Commercial,-10.61,17.51,0.963,0.776,Tier 1 - Loss-making,1
+RTE-0114,General Waste | Retail,-14.77,27.09,0.991,0.75,Tier 1 - Loss-making,1
+RTE-0061,General Waste | Retail,-5.48,27.09,0.98,0.584,Tier 1 - Loss-making,1
+RTE-0059,General Waste | Office & Commercial,-2.05,17.51,0.802,0.523,Tier 1 - Loss-making,1
+RTE-0081,General Waste | Office & Commercial,6.81,17.51,0.732,0.304,Tier 2 - Margin leak,2
+RTE-0117,General Waste | Office & Commercial,6.18,17.51,0.739,0.304,Tier 2 - Margin leak,2
+RTE-0070,General Waste | Retail,9.73,27.09,0.881,0.277,Tier 2 - Margin leak,2
+RTE-0020,General Waste | Retail,10.38,27.09,0.861,0.267,Tier 2 - Margin leak,2
+RTE-0069,General Waste | Retail,13.8,27.09,0.722,0.267,Tier 2 - Margin leak,2
+RTE-0068,General Waste | Industrial,17.24,48.24,0.991,0.179,Tier 2 - Margin leak,2
+RTE-0032,General Waste | Hospitality,17.84,31.48,0.845,0.155,Tier 2 - Margin leak,2
+RTE-0116,General Waste | Industrial,39.36,48.24,0.866,0.041,Tier 2 - Margin leak,2
+RTE-0052,General Waste | Healthcare,37.45,51.69,0.932,0.025,Tier 2 - Margin leak,2
+RTE-0041,General Waste | Restaurant & Food Service,36.75,43.55,0.723,0.021,Tier 2 - Margin leak,2
+RTE-0090,General Waste | Restaurant & Food Service,36.31,43.55,0.717,0.02,Tier 2 - Margin leak,2
+RTE-0097,General Waste | Restaurant & Food Service,37.82,43.55,0.716,0.011,Tier 2 - Margin leak,2
+RTE-0024,General Waste | Restaurant & Food Service,36.39,43.55,0.764,0.009,Tier 2 - Margin leak,2
+RTE-0006,Cardboard | Restaurant & Food Service,75.67,78.49,0.796,0.0,Tier 2 - Margin leak,2
+RTE-0034,General Waste | Industrial,38.39,48.24,0.762,0.0,Tier 2 - Margin leak,2
+RTE-0096,Recycling | Retail,63.34,68.42,0.788,0.0,Tier 2 - Margin leak,2
+RTE-0108,Recycling | Hospitality,71.52,75.58,0.804,0.0,Tier 2 - Margin leak,2
+RTE-0112,Recycling | Retail,62.86,68.42,0.743,0.0,Tier 2 - Margin leak,2

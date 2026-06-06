@@ -87,6 +87,21 @@ See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full evidence
 
 ---
 
+## Output
+
+The pipeline's results are captured in [`output/`](output/):
+
+| File | Contents |
+|---|---|
+| [`findings.md`](output/findings.md) | **The verdict** — write-up of the Tier 1/2 findings and recommendations |
+| [`analysis.html`](output/analysis.html) | Rendered analysis notebook (full evidence) |
+| [`route_scorecard.csv`](output/route_scorecard.csv) | All 120 routes with their tier verdict |
+| [`underperforming_routes.csv`](output/underperforming_routes.csv) | The 22 flagged routes |
+| [`cohort_margins.csv`](output/cohort_margins.csv) | Median margin per cohort (peer benchmark) |
+| [`waste_stream_margins.csv`](output/waste_stream_margins.csv) | Median margin by waste stream (the structural gap) |
+
+---
+
 ## How it works
 
 - **Bronze** — raw CSV → Delta under a hand-written, *enforced* schema (FAILFAST):
