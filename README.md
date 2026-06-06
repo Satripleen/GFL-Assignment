@@ -86,9 +86,9 @@ See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full evidence
 
 ## Architecture & data model
 
-Pipeline architecture and the star-schema ERD (source: [`docs/design.svg`](docs/design.svg)):
+Pipeline architecture and the star-schema ERD (vector source: [`docs/design.svg`](docs/design.svg)):
 
-![GFL Route Profitability — architecture and dimensional model](docs/design.svg)
+![GFL Route Profitability — architecture and dimensional model](docs/design.png)
 
 ---
 
@@ -118,7 +118,7 @@ src/bronze.py  silver.py         ingestion + cleaning
 src/gold_dims.py  gold_facts.py  star schema
 pipeline/__main__.py             end-to-end driver (run: python -m pipeline)
 notebooks/analysis.ipynb         Part 2 evidence (executed)
-docs/spec.md  design.svg  tasks.md
+docs/spec.md  design.svg  design.png  tasks.md
 Dockerfile  docker-compose.yml
 ```
 
