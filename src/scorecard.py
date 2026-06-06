@@ -23,6 +23,8 @@ from pyspark.sql import functions as F
 
 from src import config
 
+log = config.get_logger(__name__)
+
 BELOW_PEER_THRESHOLD = 0.70
 LOSS_DAY_RATE_THRESHOLD = 0.50
 
@@ -87,14 +89,14 @@ if __name__ == "__main__":
     n = out.count()
     counts = {r["tier"]: r["count"] for r in out.groupBy("tier").count().collect()}
     below = out.filter(F.col("below_peer_flag")).count()
-    print(f"route_scorecard rows = {n}")
-    print(f"below-peer (>70% of days) = {below}")
+    log.info("route_scorecard rows = %d", n)
+    log.info("below-peer (>70%% of days) = %d", below)
     for t in ["Tier 1 - Loss-making", "Tier 2 - Margin leak", "OK"]:
-        print(f"  {t:24s}: {counts.get(t, 0)}")
+        log.info("  %-24s: %d", t, counts.get(t, 0))
     assert n == 120, "scorecard must have one row per route"
     assert out.filter(F.col("tier").isNull()).count() == 0, "every route needs a tier"
     assert below == 22, f"expected 22 below-peer routes, got {below}"
     assert counts.get("Tier 1 - Loss-making") == 4
     assert counts.get("Tier 2 - Margin leak") == 18
-    print("OK — route_scorecard built.")
+    log.info("OK — route_scorecard built.")
     spark.stop()

@@ -19,6 +19,8 @@ from pyspark.sql import functions as F
 
 from src import config
 
+log = config.get_logger(__name__)
+
 ROUTE_ATTRS = [
     "region",
     "bu",
@@ -74,7 +76,7 @@ if __name__ == "__main__":
     silver = spark.read.format("delta").load(str(config.SILVER_ROUTE_DAY))
 
     n_routes = assert_strict_hierarchy(silver)
-    print(f"strict-hierarchy assertion PASSED — {n_routes} routes, 0 violators")
+    log.info("strict-hierarchy assertion PASSED — %d routes, 0 violators", n_routes)
 
     dim_route = build_dim_route(silver)
     dim_date = build_dim_date(silver)
@@ -85,9 +87,9 @@ if __name__ == "__main__":
     d = spark.read.format("delta").load(str(config.DIM_DATE))
     nr, nd = r.count(), d.count()
     span = d.agg(F.min("date").alias("lo"), F.max("date").alias("hi")).first()
-    print(f"dim_route rows = {nr}  (distinct route_id = {r.select('route_id').distinct().count()})")
-    print(f"dim_date  rows = {nd}  span {span['lo']} .. {span['hi']}")
+    log.info("dim_route rows = %d  (distinct route_id = %d)", nr, r.select("route_id").distinct().count())
+    log.info("dim_date  rows = %d  span %s .. %s", nd, span["lo"], span["hi"])
     assert nr == r.select("route_id").distinct().count(), "dim_route PK not unique"
     assert nd == d.select("date_key").distinct().count(), "dim_date PK not unique"
-    print("OK — Gold dimensions built.")
+    log.info("OK — Gold dimensions built.")
     spark.stop()

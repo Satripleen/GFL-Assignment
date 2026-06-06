@@ -22,6 +22,8 @@ from pyspark.sql import functions as F
 
 from src import config
 
+log = config.get_logger(__name__)
+
 RECON_TOLERANCE = 0.02  # cents-level float tolerance
 
 
@@ -122,12 +124,12 @@ if __name__ == "__main__":
     null_metric = out.filter(F.col("metric_null_flag")).count()
     cohorts = out.select("cohort_key").distinct().count()
 
-    print(f"Silver rows           = {n:,}  (1 per route_date_key: {distinct_pk:,})")
-    print(f"quarantined           = {q}")
-    print(f"recon mismatches      = {recon_bad}")
-    print(f"null-metric rows      = {null_metric}")
-    print(f"distinct cohorts      = {cohorts}")
+    log.info("Silver rows           = %s  (1 per route_date_key: %s)", f"{n:,}", f"{distinct_pk:,}")
+    log.info("quarantined           = %d", q)
+    log.info("recon mismatches      = %d", recon_bad)
+    log.info("null-metric rows      = %d", null_metric)
+    log.info("distinct cohorts      = %d", cohorts)
     assert n == distinct_pk == config.EXPECTED_SOURCE_ROWS, "PK grain broken"
     assert recon_bad == 0, "recompute disagrees with source beyond tolerance"
-    print("OK — Silver built.")
+    log.info("OK — Silver built.")
     spark.stop()

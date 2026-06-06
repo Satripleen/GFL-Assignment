@@ -7,8 +7,10 @@ session are defined once. Run this module directly as a smoke test:
 """
 from __future__ import annotations
 
+import logging
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 from pyspark.sql import DataFrame, SparkSession
@@ -36,6 +38,22 @@ FACT_ROUTE_MONTH = GOLD / "fact_route_month"
 ROUTE_SCORECARD = GOLD / "route_scorecard"
 
 EXPECTED_SOURCE_ROWS = 12_000
+
+
+# --- Logging ---------------------------------------------------------------
+def get_logger(name: str = "gfl") -> logging.Logger:
+    """Timestamped stdout logger, lazily configured so re-imports never stack
+    duplicate handlers. Honours the LOG_LEVEL env var (default INFO)."""
+    logger = logging.getLogger(name)
+    if not logger.handlers:
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s %(levelname)s %(name)s | %(message)s", "%H:%M:%S")
+        )
+        logger.addHandler(handler)
+        logger.setLevel(os.environ.get("LOG_LEVEL", "INFO").upper())
+        logger.propagate = False
+    return logger
 
 
 # --- Java ------------------------------------------------------------------
@@ -107,11 +125,12 @@ def upsert_delta(
 
 if __name__ == "__main__":
     # Task 0 acceptance check: session starts and reads the CSV at 12,000 rows.
+    log = get_logger("config")
     spark = get_spark("config-smoke-test")
-    print(f"JAVA_HOME = {os.environ.get('JAVA_HOME')}")
-    print(f"Spark {spark.version}  |  Delta extension enabled")
+    log.info("JAVA_HOME = %s", os.environ.get("JAVA_HOME"))
+    log.info("Spark %s  |  Delta extension enabled", spark.version)
     rows = spark.read.option("header", True).csv(str(SOURCE_CSV)).count()
-    print(f"source CSV rows = {rows:,}  (expected {EXPECTED_SOURCE_ROWS:,})")
+    log.info("source CSV rows = %s  (expected %s)", f"{rows:,}", f"{EXPECTED_SOURCE_ROWS:,}")
     assert rows == EXPECTED_SOURCE_ROWS, f"row count mismatch: {rows}"
-    print("OK — environment is good.")
+    log.info("OK — environment is good.")
     spark.stop()

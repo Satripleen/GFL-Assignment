@@ -20,6 +20,8 @@ from pyspark.sql import functions as F
 
 from src import config
 
+log = config.get_logger(__name__)
+
 # Measures carried at the atomic grain (everything that isn't a dim attribute).
 FACT_MEASURES = [
     "num_drivers", "num_trucks",
@@ -103,8 +105,8 @@ if __name__ == "__main__":
     fd = spark.read.format("delta").load(str(config.FACT_ROUTE_DAY))
     fm = spark.read.format("delta").load(str(config.FACT_ROUTE_MONTH))
     nd = fd.count()
-    print(f"fact_route_day rows   = {nd:,}  (expected {config.EXPECTED_SOURCE_ROWS:,})")
-    print(f"fact_route_month rows = {fm.count():,}")
+    log.info("fact_route_day rows   = %s  (expected %s)", f"{nd:,}", f"{config.EXPECTED_SOURCE_ROWS:,}")
+    log.info("fact_route_month rows = %s", f"{fm.count():,}")
     assert nd == config.EXPECTED_SOURCE_ROWS, "atomic grain broken"
 
     # Month sums must tie back to day sums (additive measures).
@@ -112,7 +114,7 @@ if __name__ == "__main__":
         day_total = fd.agg(F.sum(c)).first()[0]
         month_total = fm.agg(F.sum(c)).first()[0]
         diff = abs(float(day_total) - float(month_total))
-        print(f"  tie {c:16s}: day={day_total:,.2f}  month={month_total:,.2f}  diff={diff:.4f}")
+        log.info(f"  tie {c:16s}: day={day_total:,.2f}  month={month_total:,.2f}  diff={diff:.4f}")
         assert diff < 0.5, f"{c} does not tie between day and month"
-    print("OK — Gold facts built.")
+    log.info("OK — Gold facts built.")
     spark.stop()

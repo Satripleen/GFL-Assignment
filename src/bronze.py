@@ -21,6 +21,8 @@ from pyspark.sql.types import (
 
 from src import config
 
+log = config.get_logger(__name__)
+
 # Hand-written schema for all 39 source columns — enforced, never inferred.
 SOURCE_SCHEMA = StructType(
     [
@@ -100,15 +102,15 @@ if __name__ == "__main__":
 
     bronze = spark.read.format("delta").load(str(config.BRONZE_ROUTE_DAY))
     n = bronze.count()
-    print(f"Bronze rows = {n:,}  (expected {config.EXPECTED_SOURCE_ROWS:,})")
+    log.info("Bronze rows = %s  (expected %s)", f"{n:,}", f"{config.EXPECTED_SOURCE_ROWS:,}")
     assert n == config.EXPECTED_SOURCE_ROWS, f"row count mismatch: {n}"
 
     meta = [c for c in ("_ingested_at", "_source_file") if c in bronze.columns]
-    print(f"ingestion metadata present: {meta}")
+    log.info("ingestion metadata present: %s", meta)
     assert len(meta) == 2, "missing ingestion metadata"
     assert bronze.filter(F.col("_source_file").isNull()).count() == 0
 
-    print(f"columns = {len(bronze.columns)} (39 source + 2 metadata)")
+    log.info("columns = %d (39 source + 2 metadata)", len(bronze.columns))
     assert len(bronze.columns) == 41
-    print("OK — Bronze landed.")
+    log.info("OK — Bronze landed.")
     spark.stop()
