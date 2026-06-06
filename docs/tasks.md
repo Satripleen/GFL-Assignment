@@ -61,9 +61,11 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   18 Tier 2 (margin leak) + 98 OK. Thresholds: below-peer >0.70, loss_day_rate >0.50.
 
 ## Task 6 — Analysis notebook
-- [ ] Cohort margin gap, concentration of underperformance, structural-vs-episodic evidence
-- **Acceptance:** reproduces 35.6% General Waste / 76.5% Cardboard cohort medians and the
-  ~3% loss-days-with-incident figure from the committed data.
+- [x] Cohort margin gap, concentration of underperformance, structural-vs-episodic evidence
+- **Acceptance:** ✅ `notebooks/analysis.ipynb` (executed, outputs saved) reproduces
+  General Waste 35.60% / Cardboard 76.52% median margins, the 22/120 concentration, and
+  717 loss-days (6.0%) of which only 25 (3.5%) carry an incident; maintenance on loss-days
+  is in line with normal days.
 
 ## Task 7 — README
 - [ ] Run instructions, design summary, how to reproduce, results overview
