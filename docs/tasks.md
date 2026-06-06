@@ -37,11 +37,12 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   Idempotent MERGE verified (re-run → Delta `MERGE`, count stays 12,000). 21 cohorts.
 
 ## Task 3 — Gold dimensions + DDL
-- [ ] `dim_route` — flattened geography, `cohort_key`; MERGE on `route_id`
-- [ ] `dim_date` — smart `yyyymmdd` key, year/quarter/month/day_of_week
-- [ ] Assert strict hierarchy (each area → 1 BU → 1 region; no route moves)
-- **Acceptance:** `dim_route` = 120 routes; hierarchy assertion passes (0 violations);
-  `dim_date` covers every date in 2022–2024 present in the data.
+- [x] `dim_route` — flattened geography, `cohort_key`; MERGE on `route_id`
+- [x] `dim_date` — smart `yyyymmdd` key, year/quarter/month/day_of_week; MERGE on `date_key`
+- [x] Assert strict hierarchy (each route_id → 1 region/bu/area/cohort across all years)
+- **Acceptance:** ✅ `dim_route` = 120 routes (unique PK); strict-hierarchy assertion
+  passed (0 violators — proves SCD Type 1 is valid); `dim_date` = 1,012 days (every date
+  present in the data) spanning 2022-01-01 .. 2024-12-31.
 
 ## Task 4 — Gold facts
 - [ ] `fact_route_day` — atomic grain, FKs to `dim_date`/`dim_route`; MERGE on `route_date_key`
