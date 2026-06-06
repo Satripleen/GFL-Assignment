@@ -11,8 +11,9 @@ import os
 import subprocess
 from pathlib import Path
 
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
 from delta import configure_spark_with_delta_pip
+from delta.tables import DeltaTable
 
 # --- Paths -----------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -73,6 +74,35 @@ def get_spark(app_name: str = "gfl-route-profitability") -> SparkSession:
     spark = configure_spark_with_delta_pip(builder).getOrCreate()
     spark.sparkContext.setLogLevel("WARN")
     return spark
+
+
+def upsert_delta(
+    spark: SparkSession,
+    df: DataFrame,
+    path,
+    key_cols: list[str],
+    partition_by: list[str] | None = None,
+) -> None:
+    """Idempotent MERGE on the business key(s) — the primary Delta feature.
+
+    Re-processing the same rows upserts in place instead of duplicating, so
+    re-runs leave row counts unchanged. Creates the table on first write."""
+    path = str(path)
+    if DeltaTable.isDeltaTable(spark, path):
+        cond = " AND ".join(f"t.{k} = s.{k}" for k in key_cols)
+        (
+            DeltaTable.forPath(spark, path)
+            .alias("t")
+            .merge(df.alias("s"), cond)
+            .whenMatchedUpdateAll()
+            .whenNotMatchedInsertAll()
+            .execute()
+        )
+    else:
+        writer = df.write.format("delta")
+        if partition_by:
+            writer = writer.partitionBy(*partition_by)
+        writer.mode("overwrite").save(path)
 
 
 if __name__ == "__main__":
