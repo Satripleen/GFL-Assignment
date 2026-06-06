@@ -16,12 +16,13 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   starts a Spark+Delta session (auto-resolves JAVA_HOME) and reads the CSV at 12,000 rows.
 
 ## Task 1 — Bronze (immutable landing)
-- [ ] Hand-written `StructType` for all 39 source columns (enforced, not inferred)
-- [ ] CSV → Delta at `data/lakehouse/bronze/route_day`
-- [ ] Ingestion metadata: `_ingested_at`, `_source_file`
-- [ ] No transforms
-- **Acceptance:** Bronze table = 12,000 rows; a column with a bad type raises rather than
-  silently nulling; both metadata columns present and populated.
+- [x] Hand-written `StructType` for all 39 source columns (enforced, not inferred)
+- [x] CSV → Delta at `data/lakehouse/bronze/route_day` (overwrite — immutable reload)
+- [x] Ingestion metadata: `_ingested_at`, `_source_file`
+- [x] No transforms
+- **Acceptance:** ✅ Bronze table = 12,000 rows, 41 cols (39 + 2 metadata); FAILFAST +
+  enforced schema raises `BadRecordException` on a bad type at write (verified) rather
+  than nulling; both metadata columns present and populated.
 
 ## Task 2 — Silver (one trustworthy row per route-day)
 - [ ] Dedup on `route_date_key` (PK); quarantine table for rejects
