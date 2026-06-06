@@ -68,10 +68,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
   is in line with normal days.
 
 ## Task 7 — README + Docker
-- [x] `pipeline.py` (repo root) — single end-to-end entry point (Bronze → scorecard)
+- [x] `pipeline/pipeline.py` — single end-to-end entry point (Bronze → scorecard)
 - [x] `Dockerfile` + `docker-compose.yml` + `.dockerignore` (the deferred container story)
 - [x] `README.md` — native + Docker quickstart, design summary, results, repo layout
-- **Acceptance:** ✅ (native) from a wiped lakehouse, `python pipeline.py` rebuilds all
+- **Acceptance:** ✅ (native) from a wiped lakehouse, `python -m pipeline.pipeline` rebuilds all
   7 tables end to end in ~13s. ✅ (Docker) `docker compose run --rm pipeline` builds the
   image and produces identical results in the container (~19s) — verified via Colima (no
   Docker Desktop needed).

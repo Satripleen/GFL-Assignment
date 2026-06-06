@@ -8,7 +8,7 @@ services:
     build: .
     volumes:
       - ./:/app
-    command: python pipeline.py
+    command: python -m pipeline.pipeline
 
   jupyter:
     build: .
