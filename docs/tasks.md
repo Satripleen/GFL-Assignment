@@ -11,8 +11,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] `data/gfl_commercial_routes.csv` committed (12,000 rows + header)
 - [x] `.gitignore` excludes the regenerable lakehouse + caches
 - [x] `docs/spec.md` (SDD) and `docs/tasks.md` in place
-- [x] `src/` config module: Spark+Delta session builder, path constants
-- **Acceptance:** ✅ `pip install -r requirements.txt` clean; `python -m src.config`
+- [x] `lib/config.py` module: Spark+Delta session builder, path constants, logging
+- **Acceptance:** ✅ `pip install -r requirements.txt` clean; `python -m lib.config`
   starts a Spark+Delta session (auto-resolves JAVA_HOME) and reads the CSV at 12,000 rows.
 
 ## Task 1 — Bronze (immutable landing)

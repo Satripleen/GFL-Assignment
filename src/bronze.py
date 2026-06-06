@@ -19,7 +19,7 @@ from pyspark.sql.types import (
     StructType,
 )
 
-from src import config
+from lib import config
 
 log = config.get_logger(__name__)
 

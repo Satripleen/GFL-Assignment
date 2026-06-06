@@ -1,5 +1,5 @@
 # Java + Python in one image. The base sets JAVA_HOME=/opt/java/openjdk, which
-# src/config picks up directly (so it never needs the host's brew openjdk).
+# lib/config picks up directly (so it never needs the host's brew openjdk).
 FROM eclipse-temurin:17-jre
 
 RUN apt-get update && apt-get install -y --no-install-recommends \

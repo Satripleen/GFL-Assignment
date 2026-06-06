@@ -1,16 +1,16 @@
 """End-to-end pipeline driver — runs every layer in order against one Spark session.
 
-    .venv/bin/python -m src.pipeline
+    .venv/bin/python pipeline.py
 
 Bronze -> Silver -> Gold dims -> Gold facts -> route_scorecard. Idempotent: safe
-to re-run (MERGE upserts; counts stay stable). Each stage prints a one-line summary.
+to re-run (MERGE upserts; counts stay stable). Each stage logs a one-line summary.
 """
 from __future__ import annotations
 
 import time
 
-from src import config
-from src import bronze, silver, gold_dims, gold_facts, scorecard
+from lib import config, scorecard
+from src import bronze, silver, gold_dims, gold_facts
 
 log = config.get_logger(__name__)
 

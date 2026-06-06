@@ -42,7 +42,7 @@ python3 -m venv .venv
 .venv/bin/python pipeline.py          # Bronze -> Silver -> Gold, ~13s
 ```
 
-`src/config.py` auto-resolves `JAVA_HOME` to the Homebrew JDK, so no env setup is
+`lib/config.py` auto-resolves `JAVA_HOME` to the Homebrew JDK, so no env setup is
 needed. To view the analysis notebook:
 
 ```bash
@@ -104,10 +104,10 @@ every re-run idempotent.
 
 ```
 data/gfl_commercial_routes.csv   committed source (12,000 rows)
-src/config.py                    paths + Spark/Delta session + MERGE helper
+lib/config.py                    paths + Spark/Delta session + logging + MERGE helper
+lib/scorecard.py                 Part 2 verdict (analytics output)
 src/bronze.py  silver.py         ingestion + cleaning
 src/gold_dims.py  gold_facts.py  star schema
-src/scorecard.py                 Part 2 verdict
 pipeline.py                      end-to-end driver (single command, at repo root)
 notebooks/analysis.ipynb         Part 2 evidence (executed)
 docs/spec.md  design.svg  tasks.md

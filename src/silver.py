@@ -20,7 +20,7 @@ from __future__ import annotations
 from pyspark.sql import DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
 
-from src import config
+from lib import config
 
 log = config.get_logger(__name__)
 
