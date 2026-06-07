@@ -133,6 +133,27 @@ docs/spec.md  design.svg  design.png  tasks.md
 Dockerfile  docker-compose.yml
 ```
 
+## Tests
+
+A pytest suite under [`tests/`](tests/) covers every layer — one module per source
+file, all running against a shared local Spark+Delta session:
+
+| File | Covers |
+|---|---|
+| `test_config.py`     | logger handler safety, paths, idempotent `upsert_delta` MERGE |
+| `test_bronze.py`     | 39-column enforced schema, FAILFAST, ingestion metadata |
+| `test_silver.py`     | `_safe_div` guards, dedup/quarantine, recompute + recon flag, cohort key |
+| `test_gold_dims.py`  | strict-hierarchy assertion, `dim_route`/`dim_date` keys |
+| `test_gold_facts.py` | atomic grain & FKs, month rollup ties back, revenue-weighted margin |
+| `test_scorecard.py`  | cohort-relative Tier 1 / Tier 2 / OK classification |
+
+Tests build small synthetic rows (not the committed CSV), so they're fast and
+deterministic. Run them with:
+
+```bash
+PYTHONPATH=$PWD .venv/bin/python -m pytest
+```
+
 ## Requirements
 
 PySpark 3.5.1, delta-spark 3.2.0, Java 17 (see `requirements.txt`). Docker users
