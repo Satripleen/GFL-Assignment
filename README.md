@@ -137,3 +137,9 @@ Dockerfile  docker-compose.yml
 
 PySpark 3.5.1, delta-spark 3.2.0, Java 17 (see `requirements.txt`). Docker users
 need nothing else.
+
+---
+
+## Author
+
+**Satripleen Kaur** — [satripleen@gmail.com](mailto:satripleen@gmail.com)
