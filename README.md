@@ -161,6 +161,13 @@ need nothing else.
 
 ---
 
+## AI usage
+
+How AI was used on this project — and where I directed, corrected, and validated
+it — is documented in [`AI_USAGE.md`](AI_USAGE.md).
+
+---
+
 ## Author
 
 **Satripleen Kaur** — [satripleen@gmail.com](mailto:satripleen@gmail.com)
