@@ -180,8 +180,9 @@ PYTHONPATH=$PWD .venv/bin/python -m pytest
 
 ## Requirements
 
-PySpark 3.5.1, delta-spark 3.2.0, Java 17 (see `requirements.txt`). Docker users
-need nothing else.
+PySpark 3.5.1 and delta-spark 3.2.0 (pinned in `requirements.txt`), on Java 17
+(Homebrew `openjdk@17` natively, or the `eclipse-temurin:17` base image). Docker
+users need nothing else.
 
 ---
 

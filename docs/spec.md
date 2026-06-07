@@ -57,7 +57,7 @@ only when a route trails its cohort on **both** margin and profit-per-stop) is t
 next step if a reviewer wants the guard enforced, not just shown.
 
 Data check backing this: underperformance is **concentrated** (22 of 120 routes are below
-cohort on >70% of their days) and **structural, not episodic** (only ≈3% of loss days have
+cohort on >70% of their days) and **structural, not episodic** (only ≈3.5% of loss days have
 an incident; maintenance cost on loss days is normal).
 
 ## 1.4 Acceptance (what "done" means)

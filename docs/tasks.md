@@ -32,7 +32,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done
       components; keep source as `*_src` + `recon_flag`
 - [x] Derived: `profit_per_stop`, `profit_per_km`, `cost_per_tonne`, `completion_rate`, `cohort_key`
 - **Acceptance:** ✅ exactly 1 row per `route_date_key` (12,000 = distinct PKs); recompute
-  matches source **100%** (0 recon mismatches — all 4 formulas verified across 12,000 rows);
+  matches source **100%** (0 recon mismatches — the 3 reconciled formulas `total_cost` /
+  `net_revenue` / `gross_profit` verified across 12,000 rows; `gross_margin_pct` derives from
+  them);
   guards/dedup/quarantine are defensive (this file is clean: 0 quarantined, 0 null-metric).
   Idempotent MERGE verified (re-run → Delta `MERGE`, count stays 12,000). 21 cohorts.
 
