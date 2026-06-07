@@ -105,7 +105,8 @@ The pipeline's results are captured in [`output/`](output/):
 ## How it works
 
 - **Bronze** — raw CSV → Delta under a hand-written, *enforced* schema (FAILFAST):
-  a malformed file fails loudly. Adds ingestion metadata; no transforms.
+  a malformed file fails loudly. Adds ingestion metadata (`_ingested_at`, `_source_file`);
+  no transforms. (Full list of engineered columns: [`docs/spec.md`](docs/spec.md#engineered-columns-added-beyond-the-39-source-columns).)
 - **Silver** — one trustworthy row per `route_date_key`: dedup, quarantine bad rows,
   guard every division, and **recompute** `net_revenue` / `gross_profit` /
   `gross_margin_pct` from cost components (keeping source as `*_src` + a `recon_flag`).

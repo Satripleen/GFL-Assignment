@@ -87,6 +87,25 @@ flowing through. Adds derived metrics: `profit_per_stop`, `profit_per_km`,
 a day upserts instead of duplicating. Paired with **OPTIMIZE + ZORDER** to back the
 partitioning/slicing story.
 
+### Engineered columns (added beyond the 39 source columns)
+
+Every column we add and why — nothing in the source is silently overwritten; recomputed
+measures keep their original value as `*_src` for auditability.
+
+| Layer | Column | Type | Purpose |
+|---|---|---|---|
+| Bronze | `_ingested_at` | timestamp | When the row was landed — audit trail |
+| Bronze | `_source_file` | string | Origin file path — data lineage |
+| Silver | `total_cost_src`, `net_revenue_src`, `gross_profit_src`, `gross_margin_pct_src` | double | Original source values, preserved before recompute |
+| Silver | `recon_flag` | boolean | True when a recomputed measure disagrees with its `*_src` beyond tolerance |
+| Silver | `metric_null_flag` | boolean | True when a guarded denominator was 0/null (metric set to null, not a crash) |
+| Silver | `cohort_key` | string | `primary_waste_stream \| primary_customer_segment` — the peer-cohort grouping |
+| Silver | `profit_per_stop`, `profit_per_km`, `cost_per_tonne`, `completion_rate` | double | Derived unit-economics metrics |
+
+The recomputed measures themselves (`net_revenue`, `gross_profit`, `gross_margin_pct`,
+`total_cost`) are overwritten in place from the cost components — the originals live on as
+`*_src`.
+
 ## 2.2 Dimensional model — star schema
 
 - **Star, not snowflake.** Geography (`region/bu/area`) is flattened onto `dim_route`.
