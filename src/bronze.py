@@ -96,9 +96,17 @@ def build_bronze(spark: SparkSession) -> DataFrame:
     return bronze
 
 
+def run(spark: SparkSession) -> None:
+    """Build and persist the Bronze layer (the step the pipeline calls).
+
+    `build_bronze` already writes the table, so this is a thin alias that keeps
+    every layer's pipeline entry point uniform (`<module>.run(spark)`)."""
+    build_bronze(spark)
+
+
 if __name__ == "__main__":
     spark = config.get_spark("bronze")
-    build_bronze(spark)
+    run(spark)
 
     bronze = spark.read.format("delta").load(str(config.BRONZE_ROUTE_DAY))
     n = bronze.count()

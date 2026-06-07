@@ -13,7 +13,7 @@ Implementation is tracked task-by-task in [`tasks.md`](./tasks.md).
 
 ## 1.1 Problem
 
-GFL Commercial runs ~120 collection routes across 6 regions / 8 BUs / 29 areas,
+GFL Commercial runs ≈120 collection routes across 6 regions / 8 BUs / 29 areas,
 covering 2022–2024 (12,000 route-day records). Leadership wants to know which routes
 are **underperforming** and why — without being fooled by the structural differences
 between what routes collect.
@@ -30,8 +30,8 @@ between what routes collect.
 ## 1.3 The metric — what "underperforming" means
 
 A flat margin threshold is indefensible here: route economics are **structurally**
-different by what the route collects. Median margin runs ~35.6% for General Waste vs
-~76.5% for Cardboard — a ~40-point gap that reflects the material, not how well the
+different by what the route collects. Median margin runs ≈35.6% for General Waste vs
+≈76.5% for Cardboard — a ≈40-point gap that reflects the material, not how well the
 route is operated.
 
 So underperformance is judged **relative to a peer cohort** and at the **route level**
@@ -45,18 +45,25 @@ So underperformance is judged **relative to a peer cohort** and at the **route l
 - **Absolute floor:** any route-day with negative gross profit is flagged regardless of
   cohort. Losing money is never "fine relative to peers."
 
-Why margin % **and** profit-per-stop together: margin alone is fooled by a high-revenue
-bleeder or a tiny high-margin route — the exact trap leadership named. Pairing efficiency
-(margin %) with unit economics scaled to work done (profit/stop) avoids it.
+Why carry profit-per-stop alongside margin %: margin read alone can be misleading — a
+high-revenue bleeder or a tiny high-margin route, the exact trap leadership named. So
+`route_scorecard` carries each route's (and its cohort's) **median profit-per-stop next to
+the margin verdict for inspection** — a unit-economics sanity read scaled to work done.
+
+Scope note: the tier *rule* itself is currently margin/profit-driven (median gross profit,
+loss-day rate, and below-cohort persistence); profit-per-stop is surfaced for interpretation
+rather than wired into the classification. Folding it into the below-peer test (e.g. flag
+only when a route trails its cohort on **both** margin and profit-per-stop) is the natural
+next step if a reviewer wants the guard enforced, not just shown.
 
 Data check backing this: underperformance is **concentrated** (22 of 120 routes are below
-cohort on >70% of their days) and **structural, not episodic** (only ~3% of loss days have
+cohort on >70% of their days) and **structural, not episodic** (only ≈3% of loss days have
 an incident; maintenance cost on loss days is normal).
 
 ## 1.4 Acceptance (what "done" means)
 
 The pipeline runs end-to-end from the committed CSV; Gold tables reproduce the headline
-figures above (cohort medians, the ~22/120 concentration, the ~3% incident rate); re-runs
+figures above (cohort medians, the ≈22/120 concentration, the ≈3% incident rate); re-runs
 are idempotent. Each task in [`tasks.md`](./tasks.md) carries its own check.
 
 ---

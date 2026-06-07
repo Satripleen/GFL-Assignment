@@ -48,13 +48,10 @@ SUM_MEASURES = [
 
 
 def build_fact_route_day(silver: DataFrame) -> DataFrame:
-    date_key = (
-        F.year("date") * 10000 + F.month("date") * 100 + F.dayofmonth("date")
-    )
     return silver.select(
         "route_date_key",
-        date_key.alias("date_key"),   # FK -> dim_date
-        "route_id",                   # FK -> dim_route
+        config.date_key(F.col("date")).alias("date_key"),   # FK -> dim_date
+        "route_id",                                          # FK -> dim_route
         *FACT_MEASURES,
     )
 
@@ -79,18 +76,14 @@ def build_fact_route_month(fact_day: DataFrame, dim_route: DataFrame) -> DataFra
     ).withColumn("month_key", F.col("year") * 100 + F.col("month"))
 
 
-if __name__ == "__main__":
-    spark = config.get_spark("gold-facts")
-    spark.sparkContext.setLogLevel("ERROR")
-
-    silver = spark.read.format("delta").load(str(config.SILVER_ROUTE_DAY))
-    dim_route = spark.read.format("delta").load(str(config.DIM_ROUTE))
-
-    fact_day = build_fact_route_day(silver)
+def write_fact_route_day(spark: SparkSession, fact_day: DataFrame) -> None:
+    """Persist the atomic fact via MERGE on the business key (idempotent)."""
     config.upsert_delta(spark, fact_day, config.FACT_ROUTE_DAY, key_cols=["route_date_key"])
 
-    fact_day_tbl = spark.read.format("delta").load(str(config.FACT_ROUTE_DAY))
-    fact_month = build_fact_route_month(fact_day_tbl, dim_route)
+
+def write_fact_route_month(spark: SparkSession, fact_month: DataFrame) -> None:
+    """Persist the month aggregate as a region-partitioned overwrite, then
+    OPTIMIZE + ZORDER(bu, area) to back the slicing/partitioning story."""
     (
         fact_month.write.format("delta")
         .mode("overwrite")
@@ -98,8 +91,25 @@ if __name__ == "__main__":
         .partitionBy("region")
         .save(str(config.FACT_ROUTE_MONTH))
     )
-    # Delta OPTIMIZE + ZORDER to back the slicing/partitioning story.
     spark.sql(f"OPTIMIZE delta.`{config.FACT_ROUTE_MONTH}` ZORDER BY (bu, area)")
+
+
+def run(spark: SparkSession) -> None:
+    """Build and persist both Gold facts (the step the pipeline calls)."""
+    silver = spark.read.format("delta").load(str(config.SILVER_ROUTE_DAY))
+    dim_route = spark.read.format("delta").load(str(config.DIM_ROUTE))
+
+    write_fact_route_day(spark, build_fact_route_day(silver))
+
+    fact_day_tbl = spark.read.format("delta").load(str(config.FACT_ROUTE_DAY))
+    write_fact_route_month(spark, build_fact_route_month(fact_day_tbl, dim_route))
+
+
+if __name__ == "__main__":
+    spark = config.get_spark("gold-facts")
+    spark.sparkContext.setLogLevel("ERROR")
+
+    run(spark)
 
     # --- Acceptance checks ---------------------------------------------------
     fd = spark.read.format("delta").load(str(config.FACT_ROUTE_DAY))

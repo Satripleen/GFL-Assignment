@@ -74,7 +74,7 @@ Running the pipeline produces Delta tables under `data/lakehouse/`:
 ### Headline results
 
 - Margins are **structural**: General Waste medians **35.6%** vs Cardboard **76.5%**
-  — a ~40-point gap that reflects the material, not route operation. So routes are
+  — a ≈40-point gap that reflects the material, not route operation. So routes are
   benchmarked **within a cohort** (`waste_stream × customer_segment`), not against a
   flat threshold.
 - Underperformance is **concentrated**: **22 of 120** routes sit below their cohort
@@ -82,8 +82,8 @@ Running the pipeline produces Delta tables under `data/lakehouse/`:
   (margin leak: optimise) + **98 OK**.
 - The losses are **structural, not episodic**: of 717 loss-days (6%), only **3.5%**
   carry an incident and maintenance cost is in line with normal days.
-- The primary cost driver is **disposal cost**: **~75%** of cost on loss-days vs ~65%
-  on profitable days (~£4,257 vs £2,696/day) on roughly half the revenue — fuel/labour
+- The primary cost driver is **disposal cost**: **≈75%** of cost on loss-days vs ≈65%
+  on profitable days (≈£4,257 vs £2,696/day) on roughly half the revenue — fuel/labour
   are flat. So the Tier 1 lever is **re-pricing**, not routing.
 - Performance is **gently improving**, not deteriorating: revenue-weighted margin
   rises **48.3% → 49.1% → 49.8%** across 2022–2024 and the loss-day rate falls
@@ -106,6 +106,8 @@ The pipeline's results are captured in [`output/`](output/):
 | [`underperforming_routes.csv`](output/underperforming_routes.csv) | The 22 flagged routes |
 | [`cohort_margins.csv`](output/cohort_margins.csv) | Median margin per cohort (peer benchmark) |
 | [`waste_stream_margins.csv`](output/waste_stream_margins.csv) | Median margin by waste stream (the structural gap) |
+| [`cost_drivers.csv`](output/cost_drivers.csv) | Cost-component share & avg £/day, loss vs profitable days |
+| [`margin_trend.csv`](output/margin_trend.csv) | Revenue-weighted margin & loss-day rate by year and quarter |
 
 ---
 

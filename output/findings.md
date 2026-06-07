@@ -17,14 +17,20 @@ Of **120 routes**, **22 are underperforming** and **98 are OK**. Underperformanc
 ## How "underperforming" is defined
 
 A flat margin threshold would be indefensible: margins differ **structurally** by
-material (General Waste median **35.6%** vs Cardboard **76.5%** — a ~40-point gap).
+material (General Waste median **35.6%** vs Cardboard **76.5%** — a ≈40-point gap).
 So each route is judged **against its own cohort** (`waste_stream × customer_segment`)
 and on **persistence**:
 
 - **Below-peer day** — a route-day whose `gross_margin_pct` is below its cohort median.
-- A route is flagged when it is below-peer on **>70%** of its days.
-- **Tier 1** if it is also loss-making (median gross profit < 0, or it loses money on
-  >50% of days); otherwise **Tier 2**.
+- **Tier 1 — Loss-making**: median gross profit < 0, *or* it loses money on >50% of its
+  days. This is judged on its own (an absolute floor) — losing money is never "fine
+  relative to peers", so it does not depend on the below-peer test.
+- **Tier 2 — Margin leak**: *not* loss-making, but persistently below its cohort —
+  below-peer on **>70%** of its days.
+
+The **>70% below-peer** persistence flag (`below_peer_flag`) is what
+`underperforming_routes.csv` lists. On this dataset all 4 Tier-1 routes are also above
+that threshold, so the flagged set is **22** (4 Tier 1 + 18 Tier 2).
 
 See [`route_scorecard.csv`](route_scorecard.csv) for all 120 routes and
 [`underperforming_routes.csv`](underperforming_routes.csv) for the flagged 22.
@@ -69,12 +75,14 @@ Decomposing `total_cost` into its components points to a single lever:
 | admin_cost | 3.5% | 8.3% | £199 vs £342 |
 | maintenance_cost | 1.5% | 1.9% | £84 vs £79 |
 
-**Disposal cost is the driver.** It is ~75% of cost on loss-days vs ~65% on profitable
-days, and the average disposal bill is **~£4,257/day vs ~£2,696** — while loss-days earn
-barely half the revenue (~£4,879 vs ~£8,517). Fuel, labour and maintenance are essentially
+**Disposal cost is the driver.** It is ≈75% of cost on loss-days vs ≈65% on profitable
+days, and the average disposal bill is **≈£4,257/day vs ≈£2,696** — while loss-days earn
+barely half the revenue (≈£4,879 vs ≈£8,517). Fuel, labour and maintenance are essentially
 flat. Low-margin route-days are a **disposal-cost-vs-revenue** problem (heavy/low-value
 material or under-priced tipping), not a fleet-efficiency one — which is why the Tier 1 fix
 is **re-pricing**, not routing.
+
+Full breakdown: [`cost_drivers.csv`](cost_drivers.csv).
 
 ## 3-year trend — improving, not deteriorating
 
@@ -87,9 +95,11 @@ Revenue-weighted margin (the correct way to aggregate a ratio), 2022–2024:
 | 2024 | 49.8% | 5.4% |
 
 Fleet margin drifts **up** and the loss-day rate **falls** year over year; the quarterly
-series is stable with a slight upward trend (ending Q4-2024 at ~50.1%). The fleet as a whole
+series is stable with a slight upward trend (ending Q4-2024 at ≈50.1%). The fleet as a whole
 is healthy and slowly improving — which reinforces that the problem is **concentrated** in
 the 22 flagged routes, not a system-wide decline.
+
+Year and quarter series: [`margin_trend.csv`](margin_trend.csv).
 
 ## Files in this folder
 
@@ -100,3 +110,5 @@ the 22 flagged routes, not a system-wide decline.
 | `underperforming_routes.csv` | The 22 flagged routes |
 | `cohort_margins.csv` | Median margin per cohort (the peer benchmark) |
 | `waste_stream_margins.csv` | Median margin by waste stream (the structural gap) |
+| `cost_drivers.csv` | Cost-component share & avg £/day, loss-days vs profitable days |
+| `margin_trend.csv` | Revenue-weighted margin & loss-day rate by year and quarter |

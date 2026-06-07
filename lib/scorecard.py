@@ -11,10 +11,12 @@ routes below cohort on >70% of their days".
   * Tier 2 (Margin leak) : persistently below peers but not loss-making.
   * OK            : neither.
 
-profit_per_stop is carried as the interpretive guard (spec 1.3) so margin % is
-never read on its own.
+profit_per_stop (per route and per cohort) is carried alongside the verdict for
+inspection (spec 1.3) — a sanity read on the unit economics behind each margin.
+Note it is *not* wired into the tier rule itself: the classification is currently
+margin/profit-driven (median gross profit, loss-day rate, below-cohort persistence).
 
-    .venv/bin/python -m src.scorecard
+    .venv/bin/python -m lib.scorecard
 """
 from __future__ import annotations
 
@@ -27,6 +29,12 @@ log = config.get_logger(__name__)
 
 BELOW_PEER_THRESHOLD = 0.70
 LOSS_DAY_RATE_THRESHOLD = 0.50
+
+# Expected figures for the *committed* dataset (data/gfl_commercial_routes.csv),
+# matching the spec's published numbers. These are a sanity check against that one
+# file, NOT invariants — a refreshed data drop will legitimately change them, so
+# the standalone smoke test warns on a mismatch instead of crashing.
+COMMITTED_DATASET_BASELINE = {"routes": 120, "below_peer": 22, "tier1": 4, "tier2": 18}
 
 
 def build_scorecard(spark: SparkSession) -> DataFrame:
@@ -78,14 +86,19 @@ def build_scorecard(spark: SparkSession) -> DataFrame:
     )
 
 
+def run(spark: SparkSession) -> None:
+    """Build and persist route_scorecard via MERGE (the step the pipeline calls)."""
+    config.upsert_delta(spark, build_scorecard(spark), config.ROUTE_SCORECARD, key_cols=["route_id"])
+
+
 if __name__ == "__main__":
     spark = config.get_spark("scorecard")
     spark.sparkContext.setLogLevel("ERROR")
 
-    sc = build_scorecard(spark)
-    config.upsert_delta(spark, sc, config.ROUTE_SCORECARD, key_cols=["route_id"])
+    run(spark)
 
     out = spark.read.format("delta").load(str(config.ROUTE_SCORECARD))
+    dim_route = spark.read.format("delta").load(str(config.DIM_ROUTE))
     n = out.count()
     counts = {r["tier"]: r["count"] for r in out.groupBy("tier").count().collect()}
     below = out.filter(F.col("below_peer_flag")).count()
@@ -93,10 +106,26 @@ if __name__ == "__main__":
     log.info("below-peer (>70%% of days) = %d", below)
     for t in ["Tier 1 - Loss-making", "Tier 2 - Margin leak", "OK"]:
         log.info("  %-24s: %d", t, counts.get(t, 0))
-    assert n == 120, "scorecard must have one row per route"
+
+    # --- Structural invariants — true for any dataset, so these stay hard ----
+    n_routes = dim_route.select("route_id").distinct().count()
+    assert n == n_routes, f"scorecard must have one row per route ({n} vs {n_routes})"
     assert out.filter(F.col("tier").isNull()).count() == 0, "every route needs a tier"
-    assert below == 22, f"expected 22 below-peer routes, got {below}"
-    assert counts.get("Tier 1 - Loss-making") == 4
-    assert counts.get("Tier 2 - Margin leak") == 18
+
+    # --- Committed-dataset baseline — warn (don't crash) on a data drop ------
+    actual = {
+        "routes": n,
+        "below_peer": below,
+        "tier1": counts.get("Tier 1 - Loss-making", 0),
+        "tier2": counts.get("Tier 2 - Margin leak", 0),
+    }
+    if actual == COMMITTED_DATASET_BASELINE:
+        log.info("OK — matches the committed-dataset baseline %s", COMMITTED_DATASET_BASELINE)
+    else:
+        log.warning(
+            "scorecard figures differ from the committed-dataset baseline: expected %s, "
+            "got %s — expected if the source data changed.",
+            COMMITTED_DATASET_BASELINE, actual,
+        )
     log.info("OK — route_scorecard built.")
     spark.stop()

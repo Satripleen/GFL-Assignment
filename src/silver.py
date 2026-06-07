@@ -106,15 +106,28 @@ def build_silver(spark: SparkSession) -> tuple[DataFrame, DataFrame]:
     return s, quarantine
 
 
+def write_silver(spark: SparkSession, silver: DataFrame, quarantine: DataFrame) -> None:
+    """Persist Silver: MERGE the clean table on the PK, overwrite the quarantine."""
+    config.upsert_delta(spark, silver, config.SILVER_ROUTE_DAY, key_cols=["route_date_key"])
+    (
+        quarantine.write.format("delta")
+        .mode("overwrite")
+        .option("overwriteSchema", "true")
+        .save(str(config.SILVER_QUARANTINE))
+    )
+
+
+def run(spark: SparkSession) -> None:
+    """Build and persist the Silver layer (the step the pipeline calls)."""
+    silver, quarantine = build_silver(spark)
+    write_silver(spark, silver, quarantine)
+
+
 if __name__ == "__main__":
     spark = config.get_spark("silver")
     spark.sparkContext.setLogLevel("ERROR")
 
-    silver, quarantine = build_silver(spark)
-    config.upsert_delta(spark, silver, config.SILVER_ROUTE_DAY, key_cols=["route_date_key"])
-    quarantine.write.format("delta").mode("overwrite").option(
-        "overwriteSchema", "true"
-    ).save(str(config.SILVER_QUARANTINE))
+    run(spark)
 
     out = spark.read.format("delta").load(str(config.SILVER_ROUTE_DAY))
     n = out.count()

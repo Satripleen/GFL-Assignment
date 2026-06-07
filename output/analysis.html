@@ -7802,16 +7802,17 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="GFL-Commercial-%E2%80%94-Route-Profitability:-Analysis-(Part-2-evidence)">GFL Commercial — Route Profitability: Analysis (Part 2 evidence)<a class="anchor-link" href="#GFL-Commercial-%E2%80%94-Route-Profitability:-Analysis-(Part-2-evidence)">¶</a></h1><p>Reads the <strong>Gold</strong> Delta tables produced by the pipeline and evidences the four claims
-behind the underperformance definition (see <code>docs/spec.md</code> §1.3):</p>
+<h1 id="GFL-Commercial-%E2%80%94-Route-Profitability:-Analysis-(Part-2-evidence)">GFL Commercial — Route Profitability: Analysis (Part 2 evidence)<a class="anchor-link" href="#GFL-Commercial-%E2%80%94-Route-Profitability:-Analysis-(Part-2-evidence)">¶</a></h1><p>Reads the <strong>Gold</strong> Delta tables produced by the pipeline and answers the Part 2
+questions. Sections 1–4 establish <em>what</em> "underperforming" means and <em>who</em> it is
+(see <code>docs/spec.md</code> §1.3); sections 5–6 are the decision-relevant <em>why</em> and <em>trend</em>:</p>
 <ol>
 <li>A flat margin threshold is indefensible — margins differ structurally by waste stream.</li>
 <li>So underperformance is judged <strong>within a cohort</strong> (waste stream × customer segment).</li>
 <li>Underperformance is <strong>concentrated</strong> (a few routes), not diffuse.</li>
 <li>The losses are <strong>structural, not episodic</strong> (incidents / maintenance don't explain them).</li>
+<li>The primary <strong>cost driver</strong> on low-margin route-days is <strong>disposal cost</strong>.</li>
+<li>The <strong>3-year trend</strong> (2022–2024) — performance is gently improving, not deteriorating.</li>
 </ol>
-<p>Run after the pipeline: <code>python -m src.bronze &amp;&amp; ... &amp;&amp; python -m src.scorecard</code>, then
-execute this notebook (kernel = the project <code>.venv</code>).</p>
 </div>
 </div>
 </div>
@@ -8008,7 +8009,7 @@ To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLeve
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>General Waste sits ~35.6% and Cardboard ~76.5% — a ~40-point spread. A single threshold
+<p>General Waste sits ≈35.6% and Cardboard ≈76.5% — a ≈40-point spread. A single threshold
 would condemn every General Waste route and excuse every Cardboard one.</p>
 </div>
 </div>
@@ -8710,7 +8711,7 @@ property of specific routes, which is what makes it actionable.</p>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Only ~3% of loss-days carry an incident, and maintenance cost on loss-days is in line with
+<p>Only ≈3% of loss-days carry an incident, and maintenance cost on loss-days is in line with
 normal days. The losses are baked into the route economics — so the fix is <strong>re-pricing /
 route redesign</strong>, not chasing one-off events.</p>
 </div>
@@ -8895,9 +8896,9 @@ components — and comparing loss-days against profitable days — points to one
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><strong>Disposal cost is the driver.</strong> On loss-days it is <strong>~75%</strong> of total cost vs <strong>~65%</strong>
-on profitable days, and the average disposal bill is <strong>~£4,257/day vs ~£2,696</strong> — yet
-loss-days earn barely half the revenue (~£4,879 vs ~£8,517). Fuel, labour and
+<p><strong>Disposal cost is the driver.</strong> On loss-days it is <strong>≈75%</strong> of total cost vs <strong>≈65%</strong>
+on profitable days, and the average disposal bill is <strong>≈£4,257/day vs ≈£2,696</strong> — yet
+loss-days earn barely half the revenue (≈£4,879 vs ≈£8,517). Fuel, labour and
 maintenance are essentially flat between the two. Low-margin route-days are a
 <strong>disposal-cost-vs-revenue</strong> problem (heavy/low-value material, or under-priced tipping),
 not a fleet-efficiency one — which is exactly why the Tier-1 fix is <strong>re-pricing</strong>, not routing.</p>
@@ -9130,7 +9131,7 @@ not a fleet-efficiency one — which is exactly why the Tier-1 fix is <strong>re
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Improving, not deteriorating.</strong> Fleet margin drifts up <strong>48.3% → 49.1% → 49.8%</strong>
 across 2022–2024 and the loss-day rate falls <strong>6.8% → 5.8% → 5.4%</strong>; the quarterly series
-is stable with a slight upward trend, ending Q4-2024 at ~50.1%. The fleet as a whole is
+is stable with a slight upward trend, ending Q4-2024 at ≈50.1%. The fleet as a whole is
 healthy and slowly improving — which reinforces that the problem is <strong>concentrated</strong> in the
 22 flagged routes, not a system-wide decline.</p>
 </div>

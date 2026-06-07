@@ -3,7 +3,7 @@
 Everything downstream (Bronze/Silver/Gold) imports from here so paths and the
 session are defined once. Run this module directly as a smoke test:
 
-    .venv/bin/python -m src.config
+    .venv/bin/python -m lib.config
 """
 from __future__ import annotations
 
@@ -13,7 +13,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql import Column, DataFrame, SparkSession
+from pyspark.sql import functions as F
 from delta import configure_spark_with_delta_pip
 from delta.tables import DeltaTable
 
@@ -38,6 +39,15 @@ FACT_ROUTE_MONTH = GOLD / "fact_route_month"
 ROUTE_SCORECARD = GOLD / "route_scorecard"
 
 EXPECTED_SOURCE_ROWS = 12_000
+
+
+# --- Keys ------------------------------------------------------------------
+def date_key(date_col: Column) -> Column:
+    """yyyymmdd integer date key from a date column.
+
+    Shared by `dim_date` (the PK) and `fact_route_day` (the FK) so the dimension
+    key and the fact foreign key are computed identically and stay consistent."""
+    return F.year(date_col) * 10000 + F.month(date_col) * 100 + F.dayofmonth(date_col)
 
 
 # --- Logging ---------------------------------------------------------------

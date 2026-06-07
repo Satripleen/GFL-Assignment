@@ -58,10 +58,7 @@ def build_dim_date(silver: DataFrame) -> DataFrame:
     return (
         silver.select("date")
         .distinct()
-        .withColumn(
-            "date_key",
-            F.year("date") * 10000 + F.month("date") * 100 + F.dayofmonth("date"),
-        )
+        .withColumn("date_key", config.date_key(F.col("date")))
         .withColumn("year", F.year("date"))
         .withColumn("quarter", F.concat(F.lit("Q"), F.quarter("date")))
         .withColumn("month", F.month("date"))
@@ -70,18 +67,25 @@ def build_dim_date(silver: DataFrame) -> DataFrame:
     )
 
 
+def write_dims(spark: SparkSession, dim_route: DataFrame, dim_date: DataFrame) -> None:
+    """Persist both dimensions via MERGE on their natural keys."""
+    config.upsert_delta(spark, dim_route, config.DIM_ROUTE, key_cols=["route_id"])
+    config.upsert_delta(spark, dim_date, config.DIM_DATE, key_cols=["date_key"])
+
+
+def run(spark: SparkSession) -> None:
+    """Build and persist the Gold dimensions (the step the pipeline calls)."""
+    silver = spark.read.format("delta").load(str(config.SILVER_ROUTE_DAY))
+    assert_strict_hierarchy(silver)
+    write_dims(spark, build_dim_route(silver), build_dim_date(silver))
+
+
 if __name__ == "__main__":
     spark = config.get_spark("gold-dims")
     spark.sparkContext.setLogLevel("ERROR")
-    silver = spark.read.format("delta").load(str(config.SILVER_ROUTE_DAY))
 
-    n_routes = assert_strict_hierarchy(silver)
-    log.info("strict-hierarchy assertion PASSED — %d routes, 0 violators", n_routes)
-
-    dim_route = build_dim_route(silver)
-    dim_date = build_dim_date(silver)
-    config.upsert_delta(spark, dim_route, config.DIM_ROUTE, key_cols=["route_id"])
-    config.upsert_delta(spark, dim_date, config.DIM_DATE, key_cols=["date_key"])
+    run(spark)
+    log.info("strict-hierarchy assertion PASSED — dimensions built")
 
     r = spark.read.format("delta").load(str(config.DIM_ROUTE))
     d = spark.read.format("delta").load(str(config.DIM_DATE))
