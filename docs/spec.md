@@ -117,6 +117,9 @@ The recomputed measures themselves (`net_revenue`, `gross_profit`, `gross_margin
 - **Dimensions:** `dim_date`, `dim_route`. **Facts:** `fact_route_day` (atomic) →
   `fact_route_month` (aggregate); `route_scorecard` (derived).
 
+The ERD is [`design.svg`](./design.svg) / [`design.png`](./design.png); the explicit
+`CREATE TABLE` DDL for every Gold table is in [`../sql/ddl.sql`](../sql/ddl.sql).
+
 ### 2.3 SCD policy — Type 1 now, when to go Type 2
 
 Chosen **Type 1 (overwrite)** because the hierarchy is verified stable across 2022–2024

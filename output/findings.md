@@ -57,6 +57,40 @@ The gap is operational — routing, stop sequencing, or disposal cost — so the
 - Losses are baked into the route economics, not caused by one-off events — which is why
   the fix is pricing / route redesign rather than chasing incidents.
 
+## Primary cost driver behind low-margin route-days
+
+Decomposing `total_cost` into its components points to a single lever:
+
+| Cost component | Share on loss-days | Share on profitable days | Avg £/day (loss vs profit) |
+|---|---:|---:|---|
+| **disposal_cost** | **75.3%** | 65.2% | **£4,257 vs £2,696** |
+| labour_cost | 15.4% | 19.1% | £869 vs £791 |
+| fuel_cost | 4.4% | 5.5% | £246 vs £228 |
+| admin_cost | 3.5% | 8.3% | £199 vs £342 |
+| maintenance_cost | 1.5% | 1.9% | £84 vs £79 |
+
+**Disposal cost is the driver.** It is ~75% of cost on loss-days vs ~65% on profitable
+days, and the average disposal bill is **~£4,257/day vs ~£2,696** — while loss-days earn
+barely half the revenue (~£4,879 vs ~£8,517). Fuel, labour and maintenance are essentially
+flat. Low-margin route-days are a **disposal-cost-vs-revenue** problem (heavy/low-value
+material or under-priced tipping), not a fleet-efficiency one — which is why the Tier 1 fix
+is **re-pricing**, not routing.
+
+## 3-year trend — improving, not deteriorating
+
+Revenue-weighted margin (the correct way to aggregate a ratio), 2022–2024:
+
+| Year | Margin | Loss-day rate |
+|---|---:|---:|
+| 2022 | 48.3% | 6.8% |
+| 2023 | 49.1% | 5.8% |
+| 2024 | 49.8% | 5.4% |
+
+Fleet margin drifts **up** and the loss-day rate **falls** year over year; the quarterly
+series is stable with a slight upward trend (ending Q4-2024 at ~50.1%). The fleet as a whole
+is healthy and slowly improving — which reinforces that the problem is **concentrated** in
+the 22 flagged routes, not a system-wide decline.
+
 ## Files in this folder
 
 | File | Contents |

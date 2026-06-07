@@ -82,8 +82,15 @@ Running the pipeline produces Delta tables under `data/lakehouse/`:
   (margin leak: optimise) + **98 OK**.
 - The losses are **structural, not episodic**: of 717 loss-days (6%), only **3.5%**
   carry an incident and maintenance cost is in line with normal days.
+- The primary cost driver is **disposal cost**: **~75%** of cost on loss-days vs ~65%
+  on profitable days (~£4,257 vs £2,696/day) on roughly half the revenue — fuel/labour
+  are flat. So the Tier 1 lever is **re-pricing**, not routing.
+- Performance is **gently improving**, not deteriorating: revenue-weighted margin
+  rises **48.3% → 49.1% → 49.8%** across 2022–2024 and the loss-day rate falls
+  **6.8% → 5.4%** — the problem is concentrated in the 22 routes, not fleet-wide.
 
-See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full evidence.
+See [`notebooks/analysis.ipynb`](notebooks/analysis.ipynb) for the full evidence, and
+[`output/findings.md`](output/findings.md) for the written verdict.
 
 ---
 
@@ -119,6 +126,19 @@ every re-run idempotent.
 
 ---
 
+## Data model (Part 3)
+
+The dimensional model is a **star schema** sliceable by date, region, BU, and area:
+
+- **ERD** — [`docs/design.png`](docs/design.png) (source [`docs/design.svg`](docs/design.svg)).
+- **DDL** — [`sql/ddl.sql`](sql/ddl.sql): `CREATE TABLE` definitions for every Gold
+  table, with notes on how Delta Lake's features (MERGE on natural keys, partitioning,
+  ZORDER, schema-on-write) shaped the design.
+- **Design rationale** (star vs snowflake, natural keys, SCD Type 1 → Type 2 trigger):
+  [`docs/spec.md`](docs/spec.md#22-dimensional-model--star-schema).
+
+---
+
 ## Repo layout
 
 ```
@@ -130,6 +150,8 @@ src/gold_dims.py  gold_facts.py  star schema
 pipeline/__main__.py             end-to-end driver (run: python -m pipeline)
 notebooks/analysis.ipynb         Part 2 evidence (executed)
 docs/spec.md  design.svg  design.png  tasks.md
+sql/ddl.sql                      Gold star-schema DDL (Part 3)
+tests/                           pytest suite (one module per layer)
 Dockerfile  docker-compose.yml
 ```
 
