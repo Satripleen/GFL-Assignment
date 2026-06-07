@@ -40,9 +40,9 @@ colima start --cpu 4 --memory 6
 
 ```bash
 brew install openjdk@17               # Spark needs a JVM (17)
-python3 -m venv .venv
+python3 -m venv .venv                 # tested on Python 3.9.6 (PySpark 3.5.1 supports 3.8–3.11)
 .venv/bin/pip install -r requirements.txt
-.venv/bin/python -m pipeline            # Bronze -> Silver -> Gold, ~13s
+.venv/bin/python -m pipeline            # Bronze -> Silver -> Gold
 ```
 
 `lib/config.py` auto-resolves `JAVA_HOME` to the Homebrew JDK, so no env setup is
@@ -180,9 +180,9 @@ PYTHONPATH=$PWD .venv/bin/python -m pytest
 
 ## Requirements
 
-PySpark 3.5.1 and delta-spark 3.2.0 (pinned in `requirements.txt`), on Java 17
-(Homebrew `openjdk@17` natively, or the `eclipse-temurin:17` base image). Docker
-users need nothing else.
+PySpark 3.5.1 and delta-spark 3.2.0 (pinned in `requirements.txt`), on Python
+3.8–3.11 (tested on 3.9.6) and Java 17 (Homebrew `openjdk@17` natively, or the
+`eclipse-temurin:17` base image). Docker users need nothing else.
 
 ---
 
